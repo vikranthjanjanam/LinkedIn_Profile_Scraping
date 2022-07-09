@@ -32,8 +32,10 @@ import pandas as pd
 
 
 def linkedin_connect(driver_path = "C:\\Users\\vikra\\Documents\\LinkedIn_GRA\\WebDrivers\\chromedriver.exe", username_value = "vikranthjanjanam@gmail.com", password_value = "!1Vikranth"):
+    
     # Creating a webdriver instance
     driver = webdriver.Chrome(driver_path)
+    driver.maximize_window()
     # This instance will be used to log into LinkedIn
 
     # Opening linkedIn's login page
@@ -238,7 +240,9 @@ def get_normal_experience(experience, exp_values, profile_url):
             details += '\n' + value.get_text().strip()
         elif value.parent == experience.find('div', {'class': 'display-flex align-items-center t-14 t-normal t-black'}):
             details += '\n' + value.get_text().strip()
-    
+        elif value.parent == experience.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed inline-show-more-text--is-collapsed-with-line-clamp t-14 t-bold break-words'}):
+            details += '\n' + value.get_text().strip()
+            
     details = None if details == '' else details.strip()
     
     experience_details = {
@@ -262,68 +266,90 @@ def get_normal_experience(experience, exp_values, profile_url):
 
 def get_nested_experience(experience, exp_values, profile_url):
     
-    title, company, work_type, from_date, till_date, active, duration, location, details = None, None, None, None, None, None, None, None, None
-            
-    for i in range(len(exp_values)):
-
-        value = exp_values[i]
-        #print("\n", value.get_text().strip(), value.parent, "\n\n")
-
-        if value.parent == experience.find('span', {'class': 'mr1 t-bold'}):
-            title = value.get_text().strip()
-
-        elif value.parent == experience.find('span', {'class': 't-14 t-normal'}):
-            company = value.get_text().strip()
-
-            try:
-                comp_type = company.split(' · ')
-                if len(comp_type) > 1:
-                    work_type = comp_type[-1]
-                    company = " ".join(comp_type[0:-1])
-                else:
-                    company = comp_type[0]
-            except Exception as e:
-                print(e)
-
-        elif value.parent in experience.find_all('span', {'class': 't-14 t-normal t-black--light'}):
-
-            value1 = value.get_text().strip()
-            #print(value1)
-
-            if (' - ' not in value1) and (' · ' not in value1):
-                location = value1
-
-            else:
-                value = value1.split(' · ')
-                duration = value[1]
-
-                period = value[0]
-                from_date = period.split(' - ')[0]
-                till_date = period.split(' - ')[1]
-
-                if till_date.strip() == "Present":
-                    active = True
-                    till_date = None
-                else:
-                    active = False
-
-        elif value.parent == experience.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed'}):
-            details = value.get_text().strip()
-
-    experience_details = {
-        "profile": profile_url,
-        "title": title,
-        "company": company,
-        "work_type": work_type,
-        "from_date": from_date,
-        "till_date": till_date,
-        "active": active,
-        "duration": duration,
-        "location": location,
-        "details": details
-    }
+    ###### nolink
+    ## company - span, mr1 hoverable-link-text t-bold
+    ## Roles - span, mr1 hoverable-link-text t-bold
+    ## Period, Loc - span, t-14 t-normal t-black--light
+    ## Details - div, inline-show-more-text inline-show-more-text--is-collapsed
     
-    return [experience_details]
+    ###### link
+    ## company - span, mr1 hoverable-link-text t-bold
+    ## Roles - span, mr1 hoverable-link-text t-bold
+    ## Period, Loc - span, t-14 t-normal t-black--light
+    ## Details - div, display-flex align-items-center t-14 t-normal t-black
+    
+    company = exp_values[0].get_text().strip()
+    
+    exp_list = experience.find_all('li', {'class': 'pvs-list__paged-list-item'})
+    experience_details = []
+    
+    for exp in exp_list:
+        
+        exp_values = exp.find_all('span', {'aria-hidden': 'true'})
+        
+        title, work_type, from_date, till_date, active, duration, location, details = None, None, None, None, None, None, None, None
+        details = ''
+
+        for i in range(len(exp_values)):
+
+            value = exp_values[i]
+            #print("\n", value.get_text().strip(), value.parent, "\n\n")
+
+            if value.parent == exp.find('span', {'class': 'mr1 hoverable-link-text t-bold'}):
+                title = value.get_text().strip()
+
+            elif value.parent in exp.find_all('span', {'class': 't-14 t-normal t-black--light'}):
+
+                value1 = value.get_text().strip()
+                #print(value1)
+
+                if (' - ' not in value1) and (' · ' not in value1):
+                    location = value1
+
+                else:
+                    value = value1.split(' · ')
+                    duration = value[1]
+
+                    period = value[0]
+                    if ' - ' in period:
+                        from_date = period.split(' - ')[0]
+                        till_date = period.split(' - ')[1]
+
+                        if till_date.strip() == "Present":
+                            active = True
+                            till_date = None
+                        else:
+                            active = False
+                    else:
+                        active = False
+                        from_date = till_date = period
+
+            elif value.parent == exp.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed'}):
+                details += '\n' + value.get_text().strip()
+            elif value.parent == exp.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed inline-show-more-text--is-collapsed-with-line-clamp'}):
+                details += '\n' + value.get_text().strip()
+            elif value.parent == exp.find('div', {'class': 'display-flex align-items-center t-14 t-normal t-black'}):
+                details += '\n' + value.get_text().strip()
+            elif value.parent == exp.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed inline-show-more-text--is-collapsed-with-line-clamp t-14 t-bold break-words'}):
+                details += '\n' + value.get_text().strip()
+
+        details = None if details == '' else details.strip()
+
+        experience_detail = {
+            "profile": profile_url,
+            "title": title,
+            "company": company,
+            "work_type": work_type,
+            "from_date": from_date,
+            "till_date": till_date,
+            "active": active,
+            "duration": duration,
+            "location": location,
+            "details": details
+        }
+        experience_details += [experience_detail]
+        
+    return experience_details
 
 
 # In[9]:
@@ -341,46 +367,47 @@ def get_experience(driver, soup, profile_url):
         exps_links = exp_data.find_all('a', {'class': 'optional-action-target-wrapper artdeco-button artdeco-button--tertiary artdeco-button--3 artdeco-button--muted inline-flex justify-center full-width align-items-center artdeco-button--fluid'})
         many_exp = True if len(exps_links) > 0 else False
         # print(many_exp)
-        
+
         if many_exp == True:
-            
+
             exp_a_text = exps_links[0].get_text().strip()
             exp_link = driver.find_element("link text", exp_a_text)
-            
+
             driver.execute_script("arguments[0].click();", exp_link)
             # @class='optional-action-target-wrapper artdeco-button artdeco-button--tertiary artdeco-button--3 artdeco-button--muted inline-flex justify-center full-width align-items-center artdeco-button--fluid'
-            
+
             soup_exp = get_profile_source(driver)
             exp_data = soup_exp.find_all('div', {'class': "scaffold-finite-scroll__content"})[0]
             # print(exp_data)
-            
-            
+
+
             experiences = exp_data.find_all('li', {'class': 'pvs-list__paged-list-item artdeco-list__item pvs-list__item--line-separated'})
-            
+
             driver.back()
-        
+
         else:
             experiences = exp_data.find_all('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
-        
-        
+
+
         exp_list = []
         for experience in experiences:
-            
+
             exp_values = experience.find_all('span', {'aria-hidden': 'true'})
             # print("\n\n", exp_values, "\n\n")
-            
+
             exp_type = "normal" if exp_values[0].parent == experience.find('span', {'class': 'mr1 t-bold'}) else "nested"
             # print(exp_type, exp_values[0].parent)
-            
+
             if exp_type == "normal":
                 exp_data = get_normal_experience(experience, exp_values, profile_url)
             else:
                 exp_data = get_nested_experience(experience, exp_values, profile_url)
-                
+
             exp_list += exp_data
-            
+
     except Exception as e:
-        print(e)
+        print("No Experience found\n\n", e)
+        return []
     finally:
         pass
     
@@ -489,11 +516,12 @@ def get_education(driver, soup, profile_url):
             edu_list += edu_data
             
     except Exception as e:
-        print(e)
+        print("No Education found\n\n", e)
+        return []
     finally:
         pass
     
-    return exp_list
+    return edu_list
 
 
 # In[12]:
@@ -571,7 +599,7 @@ def scrape_profiles_list(driver, profiles):
     }
 
 
-# In[ ]:
+# In[15]:
 
 
 def join_data(profiles_data):
@@ -583,7 +611,7 @@ def join_data(profiles_data):
     
 
 
-# In[15]:
+# In[16]:
 
 
 profiles = [
