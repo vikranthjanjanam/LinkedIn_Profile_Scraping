@@ -14262,7 +14262,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># !pip install selenium</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## !pip install selenium</span>
 </pre></div>
 
      </div>
@@ -14276,7 +14276,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># !pip install bs4</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## !pip install bs4</span>
 </pre></div>
 
      </div>
@@ -14298,6 +14298,7 @@ a.anchor-link {
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </pre></div>
@@ -14409,14 +14410,14 @@ a.anchor-link {
 
         <span class="c1"># we will stop the script for 1 second so that</span>
         <span class="c1"># the data can load</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="c1"># You can change it as per your needs and internet speed</span>
 
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="c1"># We will scroll for 10 seconds.</span>
         <span class="c1"># You can change it as per your needs and internet speed</span>
-        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">:</span>
             <span class="k">break</span>
 
     <span class="n">src</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">page_source</span>
@@ -14436,6 +14437,33 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_about</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Extracting the HTML of the complete introduction box</span>
+        <span class="c1"># that contains the name, company name, and the location</span>
+        <span class="n">about_data</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;about&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">parent</span>
+        <span class="c1">#print(exp_data)</span>
+
+        <span class="n">about_list</span> <span class="o">=</span> <span class="n">about_data</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;aria-hidden&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">about_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_intro</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14486,12 +14514,15 @@ a.anchor-link {
     <span class="k">finally</span><span class="p">:</span>
         <span class="k">pass</span>
     
+    <span class="n">about</span> <span class="o">=</span> <span class="n">get_about</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+    
     <span class="n">intro</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">profile_url</span><span class="p">,</span>
         <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span>
         <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="n">last_name</span><span class="p">,</span>
         <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="n">gender</span><span class="p">,</span>
-        <span class="s2">&quot;loaction&quot;</span><span class="p">:</span> <span class="n">location</span>
+        <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+        <span class="s2">&quot;about&quot;</span><span class="p">:</span> <span class="n">about</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="p">[</span><span class="n">intro</span><span class="p">]</span>
@@ -14507,18 +14538,21 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_normal_experience</span><span class="p">(</span><span class="n">experience</span><span class="p">,</span> <span class="n">exp_values</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
     
-    <span class="n">title</span><span class="p">,</span> <span class="n">company</span><span class="p">,</span> <span class="n">work_type</span><span class="p">,</span> <span class="n">from_date</span><span class="p">,</span> <span class="n">till_date</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">title</span><span class="p">,</span> <span class="n">company</span><span class="p">,</span> <span class="n">work_type</span><span class="p">,</span> <span class="n">from_date</span><span class="p">,</span> <span class="n">till_date</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="n">details</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">exp_values</span><span class="p">)):</span>
 
         <span class="n">value</span> <span class="o">=</span> <span class="n">exp_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="c1">#print(&quot;\n&quot;, value.get_text().strip(), value.parent, &quot;\n\n&quot;)</span>
+        
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
 
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">experience</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;mr1 t-bold&#39;</span><span class="p">}):</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -14553,13 +14587,13 @@ a.anchor-link {
                     <span class="n">from_date</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; - &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">till_date</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; - &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
-                    <span class="k">if</span> <span class="n">till_date</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Present&quot;</span><span class="p">:</span>
-                        <span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="n">till_date</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1">#                     if till_date.strip() == &quot;Present&quot;:</span>
+<span class="c1">#                         active = True</span>
+<span class="c1">#                         till_date = None</span>
+<span class="c1">#                     else:</span>
+<span class="c1">#                         active = False</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="c1"># active = False</span>
                     <span class="n">from_date</span> <span class="o">=</span> <span class="n">till_date</span> <span class="o">=</span> <span class="n">period</span>
 
         <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">experience</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;inline-show-more-text inline-show-more-text--is-collapsed&#39;</span><span class="p">}):</span>
@@ -14580,9 +14614,9 @@ a.anchor-link {
         <span class="s2">&quot;work_type&quot;</span><span class="p">:</span> <span class="n">work_type</span><span class="p">,</span>
         <span class="s2">&quot;from_date&quot;</span><span class="p">:</span> <span class="n">from_date</span><span class="p">,</span>
         <span class="s2">&quot;till_date&quot;</span><span class="p">:</span> <span class="n">till_date</span><span class="p">,</span>
-        <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span>
+        <span class="c1"># &quot;active&quot;: active,</span>
         <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
-        <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+        <span class="s2">&quot;exp_location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">details</span>
     <span class="p">}</span>
     
@@ -14597,7 +14631,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_nested_experience</span><span class="p">(</span><span class="n">experience</span><span class="p">,</span> <span class="n">exp_values</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14623,13 +14657,16 @@ a.anchor-link {
         
         <span class="n">exp_values</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;aria-hidden&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">})</span>
         
-        <span class="n">title</span><span class="p">,</span> <span class="n">work_type</span><span class="p">,</span> <span class="n">from_date</span><span class="p">,</span> <span class="n">till_date</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">title</span><span class="p">,</span> <span class="n">work_type</span><span class="p">,</span> <span class="n">from_date</span><span class="p">,</span> <span class="n">till_date</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
         <span class="n">details</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">exp_values</span><span class="p">)):</span>
 
             <span class="n">value</span> <span class="o">=</span> <span class="n">exp_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="c1">#print(&quot;\n&quot;, value.get_text().strip(), value.parent, &quot;\n\n&quot;)</span>
+            
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">exp</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;mr1 hoverable-link-text t-bold&#39;</span><span class="p">}):</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -14651,13 +14688,13 @@ a.anchor-link {
                         <span class="n">from_date</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; - &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                         <span class="n">till_date</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; - &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
-                        <span class="k">if</span> <span class="n">till_date</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Present&quot;</span><span class="p">:</span>
-                            <span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
-                            <span class="n">till_date</span> <span class="o">=</span> <span class="kc">None</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1">#                         if till_date.strip() == &quot;Present&quot;:</span>
+<span class="c1">#                             active = True</span>
+<span class="c1">#                             till_date = None</span>
+<span class="c1">#                         else:</span>
+<span class="c1">#                             active = False</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="c1"># active = False</span>
                         <span class="n">from_date</span> <span class="o">=</span> <span class="n">till_date</span> <span class="o">=</span> <span class="n">period</span>
 
             <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">exp</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;inline-show-more-text inline-show-more-text--is-collapsed&#39;</span><span class="p">}):</span>
@@ -14678,9 +14715,9 @@ a.anchor-link {
             <span class="s2">&quot;work_type&quot;</span><span class="p">:</span> <span class="n">work_type</span><span class="p">,</span>
             <span class="s2">&quot;from_date&quot;</span><span class="p">:</span> <span class="n">from_date</span><span class="p">,</span>
             <span class="s2">&quot;till_date&quot;</span><span class="p">:</span> <span class="n">till_date</span><span class="p">,</span>
-            <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span>
+            <span class="c1"># &quot;active&quot;: active,</span>
             <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
-            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+            <span class="s2">&quot;exp_location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
             <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">details</span>
         <span class="p">}</span>
         <span class="n">experience_details</span> <span class="o">+=</span> <span class="p">[</span><span class="n">experience_detail</span><span class="p">]</span>
@@ -14696,7 +14733,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_experience</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">soup</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14735,6 +14772,9 @@ a.anchor-link {
 
         <span class="n">exp_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">experience</span> <span class="ow">in</span> <span class="n">experiences</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">experience</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
 
             <span class="n">exp_values</span> <span class="o">=</span> <span class="n">experience</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;aria-hidden&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">})</span>
             <span class="c1"># print(&quot;\n\n&quot;, exp_values, &quot;\n\n&quot;)</span>
@@ -14766,7 +14806,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_normal_education</span><span class="p">(</span><span class="n">education</span><span class="p">,</span> <span class="n">edu_values</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14776,6 +14816,9 @@ a.anchor-link {
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edu_values</span><span class="p">)):</span>
 
         <span class="n">value</span> <span class="o">=</span> <span class="n">edu_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
 
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">education</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;mr1 hoverable-link-text t-bold&#39;</span><span class="p">}):</span>
             <span class="n">school</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -14828,7 +14871,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_education</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">soup</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14868,6 +14911,9 @@ a.anchor-link {
         <span class="n">edu_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">education</span> <span class="ow">in</span> <span class="n">academics</span><span class="p">:</span>
             
+            <span class="k">if</span> <span class="n">education</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
             <span class="n">edu_values</span> <span class="o">=</span> <span class="n">education</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;aria-hidden&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">})</span>
             <span class="c1"># print(&quot;\n\n&quot;, exp_values, &quot;\n\n&quot;)</span>
             
@@ -14892,7 +14938,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">scrape_linkedin_profile</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">profile_url</span><span class="p">):</span>
@@ -14921,18 +14967,12 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_pd_df</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
     
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
-    
-    <span class="n">out_path</span> <span class="o">=</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Users</span><span class="se">\\</span><span class="s2">vikra</span><span class="se">\\</span><span class="s2">Documents</span><span class="se">\\</span><span class="s2">LinkedIn_GRA</span><span class="se">\\</span><span class="s2">Data</span><span class="se">\\</span><span class="s2">Results</span><span class="se">\\</span><span class="s2">&quot;</span>
-    <span class="n">file_path</span> <span class="o">=</span> <span class="n">out_path</span> <span class="o">+</span> <span class="n">category</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
-    
-    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
-    
     <span class="k">return</span> <span class="n">df</span>
 </pre></div>
 
@@ -14944,7 +14984,26 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_category_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+    
+    <span class="n">out_path</span> <span class="o">=</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Users</span><span class="se">\\</span><span class="s2">vikra</span><span class="se">\\</span><span class="s2">Documents</span><span class="se">\\</span><span class="s2">LinkedIn_GRA</span><span class="se">\\</span><span class="s2">Data</span><span class="se">\\</span><span class="s2">Results</span><span class="se">\\</span><span class="s2">&quot;</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">out_path</span> <span class="o">+</span> <span class="n">category</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y.%m.</span><span class="si">%d</span><span class="s1">_%H.%M&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+    
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">scrape_profiles_list</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">profiles</span><span class="p">):</span>
@@ -14976,31 +15035,15 @@ a.anchor-link {
     <span class="n">exp_df</span> <span class="o">=</span> <span class="n">create_pd_df</span><span class="p">(</span><span class="n">exp_list</span><span class="p">,</span> <span class="s2">&quot;experience&quot;</span><span class="p">)</span>
     <span class="n">edu_df</span> <span class="o">=</span> <span class="n">create_pd_df</span><span class="p">(</span><span class="n">edu_list</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="p">{</span>
+    <span class="n">profiles_data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;intro_df&quot;</span><span class="p">:</span> <span class="n">intro_df</span><span class="p">,</span>
         <span class="s2">&quot;exp_df&quot;</span><span class="p">:</span> <span class="n">exp_df</span><span class="p">,</span>
         <span class="s2">&quot;edu_df&quot;</span><span class="p">:</span> <span class="n">edu_df</span><span class="p">,</span>
     <span class="p">}</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">join_data</span><span class="p">(</span><span class="n">profiles_data</span><span class="p">):</span>
     
-    <span class="n">intro_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s2">&quot;intro_df&quot;</span><span class="p">]</span>
-    <span class="n">exp_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s2">&quot;exp_df&quot;</span><span class="p">]</span>
-    <span class="n">edu_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s2">&quot;edu_df&quot;</span><span class="p">]</span>
+    <span class="n">intro_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s1">&#39;intro_df&#39;</span><span class="p">]</span>
     
-    
+    <span class="k">return</span> <span class="n">profiles_data</span>
 </pre></div>
 
      </div>
@@ -15011,7 +15054,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">profiles</span> <span class="o">=</span> <span class="p">[</span>
@@ -15027,7 +15070,9 @@ a.anchor-link {
     <span class="s2">&quot;https://www.linkedin.com/in/masaya-kawakami-581b6b6b&quot;</span><span class="p">,</span>
     <span class="s2">&quot;https://www.linkedin.com/in/ryosukek&quot;</span><span class="p">,</span>
     
-    <span class="s2">&quot;https://www.linkedin.com/in/george-montgomery-3a4a2120&quot;</span><span class="p">,</span>
+    <span class="c1">## &quot;https://www.linkedin.com/in/george-montgomery-3a4a2120&quot;,</span>
+    
+    <span class="s2">&quot;https://www.linkedin.com/in/ravishankar-g-v-259423/&quot;</span><span class="p">,</span>
     <span class="s2">&quot;https://www.linkedin.com/in/ando-masaaki-2832927b/&quot;</span><span class="p">,</span>
     <span class="s2">&quot;https://www.linkedin.com/in/keisukewada&quot;</span><span class="p">,</span>
     <span class="s2">&quot;https://www.linkedin.com/in/morgan-kessous-b3b94628&quot;</span><span class="p">,</span>
@@ -15061,69 +15106,74 @@ a.anchor-link {
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-https://www.linkedin.com/in/elizabethweil Completed in: 24.06 Seconds
+https://www.linkedin.com/in/elizabethweil Completed in: 33.93 Seconds
 
 
-https://www.linkedin.com/in/alexisohanian Completed in: 23.68 Seconds
+https://www.linkedin.com/in/alexisohanian Completed in: 33.84 Seconds
 
 
-https://www.linkedin.com/in/davidjli Completed in: 23.99 Seconds
+https://www.linkedin.com/in/davidjli Completed in: 33.42 Seconds
+
+No Education found
+
+ list index out of range
+
+https://www.linkedin.com/in/matt-holleran-291a773 Completed in: 49.85 Seconds
 
 
-https://www.linkedin.com/in/matt-holleran-291a773 Completed in: 36.10 Seconds
+https://www.linkedin.com/in/reidchristian Completed in: 33.45 Seconds
 
 
-https://www.linkedin.com/in/reidchristian Completed in: 24.26 Seconds
+https://www.linkedin.com/in/heath-lukatch-86a2a Completed in: 33.50 Seconds
 
 
-https://www.linkedin.com/in/heath-lukatch-86a2a Completed in: 23.94 Seconds
+https://www.linkedin.com/in/karahartnetthurst Completed in: 33.59 Seconds
 
 
-https://www.linkedin.com/in/karahartnetthurst Completed in: 24.23 Seconds
+https://www.linkedin.com/in/jim-momtazee-65634918b Completed in: 33.54 Seconds
 
 
-https://www.linkedin.com/in/jim-momtazee-65634918b Completed in: 24.08 Seconds
+https://www.linkedin.com/in/masaya-kawakami-581b6b6b Completed in: 16.79 Seconds
 
 
-https://www.linkedin.com/in/masaya-kawakami-581b6b6b Completed in: 12.30 Seconds
+https://www.linkedin.com/in/ryosukek Completed in: 16.78 Seconds
 
 
-https://www.linkedin.com/in/ryosukek Completed in: 11.98 Seconds
+https://www.linkedin.com/in/ravishankar-g-v-259423/ Completed in: 16.88 Seconds
+
+No Education found
+
+ &#39;NoneType&#39; object has no attribute &#39;parent&#39;
+
+https://www.linkedin.com/in/ando-masaaki-2832927b/ Completed in: 16.76 Seconds
 
 
-https://www.linkedin.com/in/george-montgomery-3a4a2120 Completed in: 24.12 Seconds
-
-&#39;NoneType&#39; object has no attribute &#39;parent&#39;
-
-https://www.linkedin.com/in/ando-masaaki-2832927b/ Completed in: 11.91 Seconds
+https://www.linkedin.com/in/keisukewada Completed in: 33.44 Seconds
 
 
-https://www.linkedin.com/in/keisukewada Completed in: 23.95 Seconds
+https://www.linkedin.com/in/morgan-kessous-b3b94628 Completed in: 50.10 Seconds
 
 
-https://www.linkedin.com/in/morgan-kessous-b3b94628 Completed in: 35.88 Seconds
+https://www.linkedin.com/in/geeta-vemuri-24849b105 Completed in: 16.85 Seconds
 
 
-https://www.linkedin.com/in/geeta-vemuri-24849b105 Completed in: 12.03 Seconds
+https://www.linkedin.com/in/lawrence-handen-8376728 Completed in: 16.76 Seconds
 
 
-https://www.linkedin.com/in/lawrence-handen-8376728 Completed in: 12.11 Seconds
+https://www.linkedin.com/in/ravimhatre Completed in: 33.45 Seconds
 
 
-https://www.linkedin.com/in/ravimhatre Completed in: 24.00 Seconds
+https://www.linkedin.com/in/yochai-hacohen-05b9423 Completed in: 16.87 Seconds
 
 
-https://www.linkedin.com/in/yochai-hacohen-05b9423 Completed in: 12.10 Seconds
+https://www.linkedin.com/in/petechung Completed in: 50.29 Seconds
 
 
-https://www.linkedin.com/in/petechung Completed in: 35.93 Seconds
-
-
-https://www.linkedin.com/in/sumir-chadha-bb8b563 Completed in: 23.42 Seconds
+https://www.linkedin.com/in/sumir-chadha-bb8b563 Completed in: 33.67 Seconds
 
 
 
-Total Time: 444.06 Seconds
+Total Time: 603.77 Seconds
 </pre>
 </div>
 </div>
@@ -15135,10 +15185,64 @@ Total Time: 444.06 Seconds
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">join_data</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">):</span>
+    
+    <span class="n">merged_df</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[[</span><span class="s1">&#39;profile&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;profile&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merged_df</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">refine_data</span><span class="p">(</span><span class="n">profiles_data</span><span class="p">):</span>
+    
+    <span class="n">intro_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s1">&#39;intro_df&#39;</span><span class="p">]</span>
+    <span class="n">exp_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s1">&#39;exp_df&#39;</span><span class="p">]</span>
+    <span class="n">edu_df</span> <span class="o">=</span> <span class="n">profiles_data</span><span class="p">[</span><span class="s1">&#39;edu_df&#39;</span><span class="p">]</span>
+    
+    <span class="n">exp_df</span> <span class="o">=</span> <span class="n">join_data</span><span class="p">(</span><span class="n">intro_df</span><span class="p">,</span> <span class="n">exp_df</span><span class="p">)</span>
+    <span class="n">edu_df</span> <span class="o">=</span> <span class="n">join_data</span><span class="p">(</span><span class="n">intro_df</span><span class="p">,</span> <span class="n">edu_df</span><span class="p">)</span>
+    
+    <span class="n">profiles_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;intro_df&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">intro_df</span><span class="p">],</span>
+        <span class="s2">&quot;exp_df&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">exp_df</span><span class="p">],</span>
+        <span class="s2">&quot;edu_df&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">edu_df</span><span class="p">],</span>
+    <span class="p">}</span>
+    
+    <span class="n">save_category_df</span><span class="p">(</span><span class="n">intro_df</span><span class="p">,</span> <span class="s2">&quot;intro&quot;</span><span class="p">)</span>
+    <span class="n">save_category_df</span><span class="p">(</span><span class="n">exp_df</span><span class="p">,</span> <span class="s2">&quot;experience&quot;</span><span class="p">)</span>
+    <span class="n">save_category_df</span><span class="p">(</span><span class="n">edu_df</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">)</span>
+<span class="c1">#     save_category_df(merged_df, &quot;merged&quot;)</span>
+    
+<span class="c1">#     for key, value in profiles_data:</span>
+<span class="c1">#         save_category_df(value[0], key.split(&#39;_&#39;)[0])</span>
+    
+    <span class="k">return</span> <span class="n">profiles_data</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joined</span> <span class="o">=</span> <span class="n">refine_data</span><span class="p">(</span><span class="n">profiles_data</span><span class="p">)</span>
 </pre></div>
 
      </div>

@@ -4,13 +4,13 @@
 # In[1]:
 
 
-# !pip install selenium
+## !pip install selenium
 
 
 # In[2]:
 
 
-# !pip install bs4
+## !pip install bs4
 
 
 # In[3]:
@@ -24,6 +24,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 import time
+from datetime import datetime
 
 import pandas as pd
 
@@ -97,14 +98,14 @@ def get_profile_source(driver):
 
         # we will stop the script for 1 second so that
         # the data can load
-        time.sleep(1)
+        time.sleep(2)
         # You can change it as per your needs and internet speed
 
         end = time.time()
 
         # We will scroll for 10 seconds.
         # You can change it as per your needs and internet speed
-        if round(end - start) > 10:
+        if round(end - start) > 15:
             break
 
     src = driver.page_source
@@ -116,6 +117,25 @@ def get_profile_source(driver):
 
 
 # In[6]:
+
+
+def get_about(soup):
+    
+    try:
+        # Extracting the HTML of the complete introduction box
+        # that contains the name, company name, and the location
+        about_data = soup.find('div', {'id': 'about'}).parent
+        #print(exp_data)
+
+        about_list = about_data.find_all('span', {'aria-hidden': 'true'})
+        return about_list[1].get_text().strip()
+    except Exception as e:
+        return None
+    finally:
+        pass
+
+
+# In[7]:
 
 
 def get_intro(soup, profile_url):
@@ -166,12 +186,15 @@ def get_intro(soup, profile_url):
     finally:
         pass
     
+    about = get_about(soup)
+    
     intro = {
         "profile": profile_url,
         "first_name": first_name,
         "last_name": last_name,
         "gender": gender,
-        "loaction": location
+        "location": location,
+        "about": about
     }
     
     return [intro]
@@ -179,18 +202,21 @@ def get_intro(soup, profile_url):
     
 
 
-# In[7]:
+# In[8]:
 
 
 def get_normal_experience(experience, exp_values, profile_url):
     
-    title, company, work_type, from_date, till_date, active, duration, location, details = None, None, None, None, None, None, None, None, None
+    title, company, work_type, from_date, till_date, duration, location, details = None, None, None, None, None, None, None, None
     details = ''
     
     for i in range(len(exp_values)):
 
         value = exp_values[i]
         #print("\n", value.get_text().strip(), value.parent, "\n\n")
+        
+        if value == None:
+                continue
 
         if value.parent == experience.find('span', {'class': 'mr1 t-bold'}):
             title = value.get_text().strip()
@@ -225,13 +251,13 @@ def get_normal_experience(experience, exp_values, profile_url):
                     from_date = period.split(' - ')[0]
                     till_date = period.split(' - ')[1]
 
-                    if till_date.strip() == "Present":
-                        active = True
-                        till_date = None
-                    else:
-                        active = False
+#                     if till_date.strip() == "Present":
+#                         active = True
+#                         till_date = None
+#                     else:
+#                         active = False
                 else:
-                    active = False
+                    # active = False
                     from_date = till_date = period
 
         elif value.parent == experience.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed'}):
@@ -252,16 +278,16 @@ def get_normal_experience(experience, exp_values, profile_url):
         "work_type": work_type,
         "from_date": from_date,
         "till_date": till_date,
-        "active": active,
+        # "active": active,
         "duration": duration,
-        "location": location,
+        "exp_location": location,
         "details": details
     }
     
     return [experience_details]
 
 
-# In[8]:
+# In[9]:
 
 
 def get_nested_experience(experience, exp_values, profile_url):
@@ -287,13 +313,16 @@ def get_nested_experience(experience, exp_values, profile_url):
         
         exp_values = exp.find_all('span', {'aria-hidden': 'true'})
         
-        title, work_type, from_date, till_date, active, duration, location, details = None, None, None, None, None, None, None, None
+        title, work_type, from_date, till_date, duration, location, details = None, None, None, None, None, None, None
         details = ''
 
         for i in range(len(exp_values)):
 
             value = exp_values[i]
             #print("\n", value.get_text().strip(), value.parent, "\n\n")
+            
+            if value == None:
+                continue
 
             if value.parent == exp.find('span', {'class': 'mr1 hoverable-link-text t-bold'}):
                 title = value.get_text().strip()
@@ -315,13 +344,13 @@ def get_nested_experience(experience, exp_values, profile_url):
                         from_date = period.split(' - ')[0]
                         till_date = period.split(' - ')[1]
 
-                        if till_date.strip() == "Present":
-                            active = True
-                            till_date = None
-                        else:
-                            active = False
+#                         if till_date.strip() == "Present":
+#                             active = True
+#                             till_date = None
+#                         else:
+#                             active = False
                     else:
-                        active = False
+                        # active = False
                         from_date = till_date = period
 
             elif value.parent == exp.find('div', {'class': 'inline-show-more-text inline-show-more-text--is-collapsed'}):
@@ -342,9 +371,9 @@ def get_nested_experience(experience, exp_values, profile_url):
             "work_type": work_type,
             "from_date": from_date,
             "till_date": till_date,
-            "active": active,
+            # "active": active,
             "duration": duration,
-            "location": location,
+            "exp_location": location,
             "details": details
         }
         experience_details += [experience_detail]
@@ -352,7 +381,7 @@ def get_nested_experience(experience, exp_values, profile_url):
     return experience_details
 
 
-# In[9]:
+# In[10]:
 
 
 def get_experience(driver, soup, profile_url):
@@ -391,6 +420,9 @@ def get_experience(driver, soup, profile_url):
 
         exp_list = []
         for experience in experiences:
+            
+            if experience == None:
+                continue
 
             exp_values = experience.find_all('span', {'aria-hidden': 'true'})
             # print("\n\n", exp_values, "\n\n")
@@ -414,7 +446,7 @@ def get_experience(driver, soup, profile_url):
     return exp_list
 
 
-# In[10]:
+# In[11]:
 
 
 def get_normal_education(education, edu_values, profile_url):
@@ -424,6 +456,9 @@ def get_normal_education(education, edu_values, profile_url):
     for i in range(len(edu_values)):
 
         value = edu_values[i]
+        
+        if value == None:
+                continue
 
         if value.parent == education.find('span', {'class': 'mr1 hoverable-link-text t-bold'}):
             school = value.get_text().strip()
@@ -468,7 +503,7 @@ def get_normal_education(education, edu_values, profile_url):
     return [edu_details]
 
 
-# In[11]:
+# In[12]:
 
 
 def get_education(driver, soup, profile_url):
@@ -508,6 +543,9 @@ def get_education(driver, soup, profile_url):
         edu_list = []
         for education in academics:
             
+            if education == None:
+                continue
+            
             edu_values = education.find_all('span', {'aria-hidden': 'true'})
             # print("\n\n", exp_values, "\n\n")
             
@@ -524,7 +562,7 @@ def get_education(driver, soup, profile_url):
     return edu_list
 
 
-# In[12]:
+# In[13]:
 
 
 def scrape_linkedin_profile(driver, profile_url):
@@ -545,22 +583,27 @@ def scrape_linkedin_profile(driver, profile_url):
     }
 
 
-# In[13]:
+# In[14]:
 
 
 def create_pd_df(data_list, category):
     
     df = pd.DataFrame(data_list)
-    
-    out_path = "C:\\Users\\vikra\\Documents\\LinkedIn_GRA\\Data\\Results\\"
-    file_path = out_path + category + str(time.time()) + ".csv"
-    
-    df.to_csv(file_path, header = True, index = False, sep = ',')
-    
     return df
 
 
-# In[14]:
+# In[15]:
+
+
+def save_category_df(df, category):
+    
+    out_path = "C:\\Users\\vikra\\Documents\\LinkedIn_GRA\\Data\\Results\\"
+    file_path = out_path + category + '_' + str(datetime.today().strftime('%Y.%m.%d_%H.%M')) + ".csv"
+    
+    df.to_csv(file_path, header = True, index = False, sep = ',')
+
+
+# In[17]:
 
 
 def scrape_profiles_list(driver, profiles):
@@ -592,26 +635,18 @@ def scrape_profiles_list(driver, profiles):
     exp_df = create_pd_df(exp_list, "experience")
     edu_df = create_pd_df(edu_list, "education")
     
-    return {
+    profiles_data = {
         "intro_df": intro_df,
         "exp_df": exp_df,
         "edu_df": edu_df,
     }
-
-
-# In[15]:
-
-
-def join_data(profiles_data):
     
-    intro_df = profiles_data["intro_df"]
-    exp_df = profiles_data["exp_df"]
-    edu_df = profiles_data["edu_df"]
+    intro_df = profiles_data['intro_df']
     
-    
+    return profiles_data
 
 
-# In[16]:
+# In[18]:
 
 
 profiles = [
@@ -627,7 +662,9 @@ profiles = [
     "https://www.linkedin.com/in/masaya-kawakami-581b6b6b",
     "https://www.linkedin.com/in/ryosukek",
     
-    "https://www.linkedin.com/in/george-montgomery-3a4a2120",
+    ## "https://www.linkedin.com/in/george-montgomery-3a4a2120",
+    
+    "https://www.linkedin.com/in/ravishankar-g-v-259423/",
     "https://www.linkedin.com/in/ando-masaaki-2832927b/",
     "https://www.linkedin.com/in/keisukewada",
     "https://www.linkedin.com/in/morgan-kessous-b3b94628",
@@ -643,10 +680,48 @@ profiles = [
 profiles_data = scrape_profiles_list(driver, profiles)
 
 
-# In[ ]:
+# In[21]:
 
 
+def join_data(df1, df2):
+    
+    merged_df = df1[['profile', 'first_name', 'last_name', 'location']].merge(df2, on = 'profile')
+    return merged_df
 
+
+# In[22]:
+
+
+def refine_data(profiles_data):
+    
+    intro_df = profiles_data['intro_df']
+    exp_df = profiles_data['exp_df']
+    edu_df = profiles_data['edu_df']
+    
+    exp_df = join_data(intro_df, exp_df)
+    edu_df = join_data(intro_df, edu_df)
+    
+    profiles_data = {
+        "intro_df": [intro_df],
+        "exp_df": [exp_df],
+        "edu_df": [edu_df],
+    }
+    
+    save_category_df(intro_df, "intro")
+    save_category_df(exp_df, "experience")
+    save_category_df(edu_df, "education")
+#     save_category_df(merged_df, "merged")
+    
+#     for key, value in profiles_data:
+#         save_category_df(value[0], key.split('_')[0])
+    
+    return profiles_data
+
+
+# In[23]:
+
+
+joined = refine_data(profiles_data)
 
 
 # In[ ]:
